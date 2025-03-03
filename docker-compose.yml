@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/blockchain_tracker
+      - MORALIS_API_KEY=your_moralis_api_key
+      - EMAIL_HOST=smtp.example.com
+      - EMAIL_USER=user
+      - EMAIL_PASS=password
+
+  postgres:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=blockchain_tracker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
