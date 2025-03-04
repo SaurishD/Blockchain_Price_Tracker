@@ -83,6 +83,8 @@ export class SchedulerService{
                 currentPrice: currPrice.price
             }
         })
+
+        this.scheduleRepo.updateAlertTime(alert)
     }
 }
 

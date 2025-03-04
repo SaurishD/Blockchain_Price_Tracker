@@ -44,4 +44,13 @@ export class SchedulerRepository{
             }
         })
     }
+
+    async updateAlertTime(alert: Alert) {
+        const updatedFields = {
+            lastUpdateSent: new Date(),
+        };
+    
+        // Update the alert in the repository
+        return this.alertRepository.update(alert.id, updatedFields);
+    }
 }
