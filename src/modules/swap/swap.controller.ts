@@ -8,7 +8,7 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 export class SwapController {
     constructor(private readonly swapService: SwapService){}
 
-    @Get('ethToBtc')
+    @Get('ethToBtc/:ethAmount')
     @ApiOperation({ summary: 'Get eth to btc swap price' })
     @ApiResponse({ status: 200, description: 'Successful response' })
     @ApiParam({name: "ethAmount", required: true, type: Number, description: "Amount of eth to be swapped"})

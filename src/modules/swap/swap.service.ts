@@ -10,7 +10,7 @@ export class SwapService{
     constructor(private readonly swapRepository: SwapRepository){}
 
     async getBtcAmountForEth(ethAmount: number) : Promise<SwapResponseDto>{
-        const fees = ethAmount * FEES_PERCENT/100.0;
+        const fees = (ethAmount * FEES_PERCENT)/100.0;
         const [btcPrice, ethPrice] = await Promise.all([
             this.swapRepository.getLatestPrice('BTC'),
             this.swapRepository.getLatestPrice('ETH')
@@ -18,11 +18,9 @@ export class SwapService{
         if (!btcPrice || !ethPrice) {
             throw NotFoundException;
         }
-        const totalBtcAmount = (ethAmount-fees)*ethPrice/btcPrice
- 
-        let response: SwapResponseDto = new SwapResponseDto();
-        response.fees = fees
-        response.amountOfBtc = totalBtcAmount
+
+        const amountOfBtc = (ethAmount-fees)*ethPrice/btcPrice 
+        let response: SwapResponseDto = {fees, amountOfBtc} as SwapResponseDto;
 
         return response;
 
