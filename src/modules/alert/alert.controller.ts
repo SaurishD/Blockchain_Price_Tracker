@@ -2,12 +2,14 @@ import { Body, Controller, InternalServerErrorException, NotFoundException, Post
 import { Alert } from "src/common/entities/alert.entity";
 import { AlertService } from "./alert.service";
 import { CreateAlertDto } from "src/common/dto/createAlert.dto";
+import { ApiBody } from "@nestjs/swagger";
 
 
 @Controller("alert")
 export class AlertController{
     constructor(private readonly alertService: AlertService){}
     @Post('setAlert')
+    @ApiBody({type: CreateAlertDto})
     async setAlert(@Body() createAlertRequest: CreateAlertDto): Promise<Alert>{
         try {
             let alert: Alert = new Alert();
