@@ -19,7 +19,7 @@ export class SchedulerRepository{
     }
 
     async savePrice(assetId: string, price: number): Promise<Price>{
-        return this.priceRepository.create({asset_id: assetId, price: price});
+        return this.priceRepository.save({asset_id: assetId, price: price} as Price);
     }
 
     async getSuddenPriceChangeIn1h(pr: Price): Promise<Price | null>{

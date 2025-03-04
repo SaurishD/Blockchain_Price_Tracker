@@ -5,6 +5,6 @@ import { Repository } from "typeorm";
 
 export class AlertRepository extends Repository<Alert> {
     async CreateAlert(alert: Alert) {
-        return this.create(alert);
+        return this.save(alert);
     }
 }
