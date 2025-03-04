@@ -15,7 +15,7 @@ export class Alert {
     @Column({name: 'price_limit'})
     priceLimit: number;
 
-    @Column({name: 'last-update-sent', type:'timestamp'})
+    @Column({name: 'last-update-sent', type:'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: false})
     lastUpdateSent: Date;
 
 }

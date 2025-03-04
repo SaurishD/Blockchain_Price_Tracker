@@ -49,6 +49,7 @@ import { Alert } from './common/entities/alert.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
       autoLoadEntities: true,
     }),
     TypeOrmModule.forFeature([Price, Alert]),

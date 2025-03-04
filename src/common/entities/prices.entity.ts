@@ -12,6 +12,6 @@ export class Price {
     price: number;
 
 
-    @CreateDateColumn({ name: 'timestamp', type: 'timestamp', default: 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ name: 'timestamp', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: false })
     timestamp: Date;
 }
