@@ -1,9 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
 import Molaris from "moralis";
+import { SchedulerRepository } from "./scheduler.repo";
+import { Alert } from "src/common/entities/alert.entity";
+import { Price } from "src/common/entities/prices.entity";
 
 @Injectable()
 export class SchedulerService{
+    constructor(private readonly scheduleRepo: SchedulerRepository){}
+
     @Cron('0 */5 * * * *') // Runs every 5 minutes
     async priceUpdateCron() {
         await Molaris.start({
@@ -27,9 +32,34 @@ export class SchedulerService{
         const ethPrice = getPriceResponse[0].usdPrice;
         const btcPrice = getPriceResponse[2].usdPrice;
         const maticPrice = getPriceResponse[1].usdPrice;
-        console.log(ethPrice,btcPrice,maticPrice)
+        const prices = await Promise.all([
+            this.scheduleRepo.savePrice('ETH',ethPrice),
+            this.scheduleRepo.savePrice('MATIC',maticPrice),
+            this.scheduleRepo.savePrice('BTC',btcPrice),
+         ])
+
+         //check and send alerts
+         for (const pr of prices){
+            const prevPrice = await this.scheduleRepo.getSuddenPriceChangeIn1h(pr);
+            if(prevPrice){
+                await this.sendUpdateToAdmin(prevPrice, pr);
+            }
+
+            const alerts = await this.scheduleRepo.getTriggeredAlerts(pr);
+            for(const al of alerts){
+                await this.sendAlertMailsToUser(al);
+            }
+         }
 
 
+    }
+
+    async sendUpdateToAdmin(prevPrice, price: Price) {
+
+    }
+
+    async sendAlertMailsToUser(alert: Alert) {
+        
     }
 }
 
