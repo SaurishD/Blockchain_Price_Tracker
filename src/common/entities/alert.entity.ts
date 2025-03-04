@@ -1,8 +1,9 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity('alerts')
 export class Alert {
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column({name: 'asset_id'})

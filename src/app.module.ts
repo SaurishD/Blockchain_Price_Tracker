@@ -43,13 +43,12 @@ import { Alert } from './common/entities/alert.entity';
     ),
     TypeOrmModule.forRoot({
       type: 'postgres', 
-      host: process.env.DB_HOST,
+      host: 'postgres',
       port: parseInt(process.env.DB_PORT || '5432'),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // use with caution in production
       autoLoadEntities: true,
     }),
     TypeOrmModule.forFeature([Price, Alert]),
