@@ -8,6 +8,4 @@ import { SwapRepository } from "./swap.repo";
     controllers: [SwapController],
     providers: [SwapService, SwapRepository]
 })
-export class SwapModule {
-    
-}
+export class SwapModule {}
