@@ -1,7 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Alert } from "src/common/entities/alert.entity";
+import { Repository } from "typeorm";
 
 
-@Injectable()
-export class AlertRepository {
-    
+
+export class AlertRepository extends Repository<Alert> {
+    async CreateAlert(alert: Alert) {
+        return this.create(alert);
+    }
 }
