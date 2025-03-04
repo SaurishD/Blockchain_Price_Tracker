@@ -8,9 +8,14 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule } from '@nestjs/config';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { ScheduleModule } from '@nestjs/schedule';
+import { SchedulerService } from './scheduler/scheduler.service';
 
 @Module({
-  imports: [PriceModule, SwapModule, AlertModule, ConfigModule.forRoot(),MailerModule.forRoot(
+  imports: [PriceModule, SwapModule, AlertModule, 
+    ScheduleModule.forRoot(),
+    ConfigModule.forRoot(),
+    MailerModule.forRoot(
     {
       transport: {
         host: 'smtp.gmail.com', // Replace with your SMTP host
@@ -32,8 +37,9 @@ import { join } from 'path';
         },
       },
     }
-  )],
+  )
+],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SchedulerService],
 })
 export class AppModule {}
