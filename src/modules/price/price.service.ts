@@ -11,7 +11,7 @@ export class PriceService{
 
         
         const currentTimestamp = new Date()
-        let diff = -1
+        let diff = 0.0
         const allEthPrices = await this.priceRepo.getLast24hPrices('ETH');
         const ethHourlyPrice = allEthPrices.filter(t => { 
             if(this.isMoreThanXHoursApart(currentTimestamp, t.timestamp,diff)){
@@ -20,7 +20,7 @@ export class PriceService{
             }
             return false
         })
-
+        diff = 0.0
         const allPolPrices = await this.priceRepo.getLast24hPrices('MATIC');
         const polygonHourlyPrice = allPolPrices.filter(t => { 
             if(this.isMoreThanXHoursApart(currentTimestamp, t.timestamp,diff)){
@@ -38,7 +38,7 @@ export class PriceService{
 
     isMoreThanXHoursApart(timestampA: Date, timestampB: Date, x: number): boolean {
         const diffInMs = Math.abs(timestampA.getTime() - timestampB.getTime());
-        const diffInHours = diffInMs / (1000 * 60 * 60); // Convert milliseconds to hours
+        const diffInHours = diffInMs / (1000.0 * 60 * 60); // Convert milliseconds to hours
         return diffInHours > x;
     }
 }

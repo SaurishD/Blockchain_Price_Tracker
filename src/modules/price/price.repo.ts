@@ -21,7 +21,7 @@ export class PriceRepository{
                 asset_id: assetId,
                 timestamp: MoreThanOrEqual(twentyFourHoursAgo),
             },
-            order: {timestamp: "ASC"}
+            order: {timestamp: "DESC"}
         })
         return prices.map(p => ({ price: p.price, timestamp: p.timestamp } as PricePoint))
     }
