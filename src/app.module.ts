@@ -10,36 +10,51 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { join } from 'path';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SchedulerService } from './scheduler/scheduler.service';
+import { SchedulerRepository } from './scheduler/scheduler.repo';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Price } from './common/entities/prices.entity';
+import { Alert } from './common/entities/alert.entity';
 
 @Module({
   imports: [PriceModule, SwapModule, AlertModule, 
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
-    MailerModule.forRoot(
-    {
-      transport: {
-        host: 'smtp.gmail.com', // Replace with your SMTP host
-        port: 587, // Replace with your SMTP port
-        secure: false, // true for 465, false for other ports
-        auth: {
-          user: process.env.GMAIL_SMTP_USERNAME, // Replace with your email
-          pass: process.env.GMAIL_SMTP_PASSWORD, // Replace with your email password
+    MailerModule.forRoot({
+        transport: {
+          host: 'smtp.gmail.com', // Replace with your SMTP host
+          port: 587, // Replace with your SMTP port
+          secure: false, // true for 465, false for other ports
+          auth: {
+            user: process.env.GMAIL_SMTP_USERNAME, // Replace with your email
+            pass: process.env.GMAIL_SMTP_PASSWORD, // Replace with your email password
+          },
         },
-      },
-      defaults: {
-        from: '"No Reply" <no-reply@saurishdarodkar.com>', // Default sender
-      },
-      template: {
-        dir: join(__dirname, 'templates'), // Path to your email templates
-        adapter: new HandlebarsAdapter(), // Use Handlebars for templating
-        options: {
-          strict: true,
+        defaults: {
+          from: '"No Reply" <no-reply@saurishdarodkar.com>', // Default sender
         },
-      },
-    }
-  )
-],
+        template: {
+          dir: join(__dirname, 'templates'), // Path to your email templates
+          adapter: new HandlebarsAdapter(), // Use Handlebars for templating
+          options: {
+            strict: true,
+          },
+        },
+      }
+    ),
+    TypeOrmModule.forRoot({
+      type: 'postgres', 
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '5432'),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true, // use with caution in production
+      autoLoadEntities: true,
+    }),
+    TypeOrmModule.forFeature([Price, Alert]),
+  ],
   controllers: [AppController],
-  providers: [AppService, SchedulerService],
+  providers: [AppService, SchedulerService, SchedulerRepository],
 })
 export class AppModule {}

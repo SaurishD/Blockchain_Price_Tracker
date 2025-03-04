@@ -1,11 +1,22 @@
+import { Injectable } from "@nestjs/common";
+import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { Alert } from "src/common/entities/alert.entity";
 import { Price } from "src/common/entities/prices.entity"
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from "typeorm"
+import { DataSource, LessThanOrEqual, MoreThanOrEqual, Repository } from "typeorm"
 
-
+@Injectable()
 export class SchedulerRepository{
 
-    constructor(private priceRepository: Repository<Price>, private alertRepository: Repository<Alert>) {}
+    private priceRepository: Repository<Price>;
+    private alertRepository: Repository<Alert>;
+
+    constructor(
+        @InjectDataSource()
+        private dataSource: DataSource
+    ) {
+        this.priceRepository = this.dataSource.getRepository(Price);
+        this.alertRepository = this.dataSource.getRepository(Alert);
+    }
 
     async savePrice(assetId: string, price: number): Promise<Price>{
         return this.priceRepository.create({asset_id: assetId, price: price});
