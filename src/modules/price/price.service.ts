@@ -21,7 +21,7 @@ export class PriceService{
             return false
         })
 
-        const allPolPrices = await this.priceRepo.getLast24hPrices('POL');
+        const allPolPrices = await this.priceRepo.getLast24hPrices('MATIC');
         const polygonHourlyPrice = allPolPrices.filter(t => { 
             if(this.isMoreThanXHoursApart(currentTimestamp, t.timestamp,diff)){
                 diff += 1
@@ -31,7 +31,7 @@ export class PriceService{
         })
 
         const ethPrices = {assetId: "ETH", prices: ethHourlyPrice} as PriceResponseDto
-        const polPrices = {assetId: "POL", prices: polygonHourlyPrice} as PriceResponseDto
+        const polPrices = {assetId: "MATIC", prices: polygonHourlyPrice} as PriceResponseDto
 
         return [ethPrices, polPrices]
     }
