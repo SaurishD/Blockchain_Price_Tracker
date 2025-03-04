@@ -28,7 +28,7 @@ export class SchedulerRepository{
         return this.priceRepository.findOne({
             where: {
                 asset_id: pr.asset_id,
-                price: LessThanOrEqual(pr.price * 97.09),
+                price: LessThanOrEqual(pr.price * 0.9709),
                 timestamp: MoreThanOrEqual(timeBefore1h)
             }
         })

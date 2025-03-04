@@ -12,7 +12,7 @@ export class Alert {
     @Column({name: 'email'})
     email: string;
 
-    @Column({name: 'price_limit'})
+    @Column({name: 'price_limit', type: 'decimal', precision: 18, scale: 8 })
     priceLimit: number;
 
     @Column({name: 'last-update-sent', type:'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: false})
