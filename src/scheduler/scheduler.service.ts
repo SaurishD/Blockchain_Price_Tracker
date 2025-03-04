@@ -4,10 +4,11 @@ import Molaris from "moralis";
 import { SchedulerRepository } from "./scheduler.repo";
 import { Alert } from "src/common/entities/alert.entity";
 import { Price } from "src/common/entities/prices.entity";
+import { MailerService } from "@nestjs-modules/mailer";
 
 @Injectable()
 export class SchedulerService{
-    constructor(private readonly scheduleRepo: SchedulerRepository){}
+    constructor(private readonly scheduleRepo: SchedulerRepository, private readonly mailerService: MailerService){}
 
     @Cron('0 */5 * * * *') // Runs every 5 minutes
     async priceUpdateCron() {
@@ -47,19 +48,41 @@ export class SchedulerService{
 
             const alerts = await this.scheduleRepo.getTriggeredAlerts(pr);
             for(const al of alerts){
-                await this.sendAlertMailsToUser(al);
+                await this.sendAlertMailsToUser(al, pr);
             }
          }
 
 
     }
 
-    async sendUpdateToAdmin(prevPrice, price: Price) {
+    async sendUpdateToAdmin(prevPrice: Price, price: Price) {
+        const percentIncrease = ((price.price - prevPrice.price)/prevPrice.price)*100
+        this.mailerService.sendMail({
+            to: process.env.ADMIN_EMAIL,
+            subject: "Price Increase Alert",
+            template: "./priceIncreaseAlert.hbs",
+            context: {
+                cryptoName: prevPrice.asset_id,
+                currentPrice: price.price,
+                timestamp: price.timestamp.toDateString(),
+                percentIncrease: percentIncrease
 
+            }
+        })
     }
 
-    async sendAlertMailsToUser(alert: Alert) {
+    async sendAlertMailsToUser(alert: Alert, currPrice: Price) {
         
+        this.mailerService.sendMail({
+            to: alert.email,
+            subject: "Price Hit Alert",
+            template: "./priceHitAlert.hbs",
+            context: {
+                crypotName: alert.assetId,
+                setPrice: alert.priceLimit,
+                currentPrice: currPrice.price
+            }
+        })
     }
 }
 
